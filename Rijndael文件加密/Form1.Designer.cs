@@ -38,6 +38,11 @@
             this.progressBar2 = new System.Windows.Forms.ProgressBar();
             this.label_DocSize = new System.Windows.Forms.Label();
             this.Monitor = new System.Windows.Forms.Timer(this.components);
+            this.comboBox_EncDecFunction = new System.Windows.Forms.ComboBox();
+            this.comboBox_Core = new System.Windows.Forms.ComboBox();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.DoubleEncDec = new System.Windows.Forms.CheckBox();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // EncryptBut
@@ -52,7 +57,7 @@
             // 
             // DecryptBut
             // 
-            this.DecryptBut.Location = new System.Drawing.Point(199, 12);
+            this.DecryptBut.Location = new System.Drawing.Point(12, 41);
             this.DecryptBut.Name = "DecryptBut";
             this.DecryptBut.Size = new System.Drawing.Size(75, 23);
             this.DecryptBut.TabIndex = 1;
@@ -69,7 +74,7 @@
             // MemoryTimerLabel
             // 
             this.MemoryTimerLabel.AutoSize = true;
-            this.MemoryTimerLabel.Location = new System.Drawing.Point(179, 109);
+            this.MemoryTimerLabel.Location = new System.Drawing.Point(262, 147);
             this.MemoryTimerLabel.Name = "MemoryTimerLabel";
             this.MemoryTimerLabel.Size = new System.Drawing.Size(95, 12);
             this.MemoryTimerLabel.TabIndex = 2;
@@ -77,22 +82,22 @@
             // 
             // progressBar1
             // 
-            this.progressBar1.Location = new System.Drawing.Point(12, 41);
+            this.progressBar1.Location = new System.Drawing.Point(12, 70);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(262, 23);
+            this.progressBar1.Size = new System.Drawing.Size(385, 23);
             this.progressBar1.TabIndex = 3;
             // 
             // progressBar2
             // 
-            this.progressBar2.Location = new System.Drawing.Point(12, 70);
+            this.progressBar2.Location = new System.Drawing.Point(12, 99);
             this.progressBar2.Name = "progressBar2";
-            this.progressBar2.Size = new System.Drawing.Size(262, 23);
+            this.progressBar2.Size = new System.Drawing.Size(385, 23);
             this.progressBar2.TabIndex = 4;
             // 
             // label_DocSize
             // 
             this.label_DocSize.AutoSize = true;
-            this.label_DocSize.Location = new System.Drawing.Point(12, 109);
+            this.label_DocSize.Location = new System.Drawing.Point(12, 147);
             this.label_DocSize.Name = "label_DocSize";
             this.label_DocSize.Size = new System.Drawing.Size(20, 12);
             this.label_DocSize.TabIndex = 5;
@@ -105,11 +110,55 @@
             this.Monitor.Interval = 1;
             this.Monitor.Tick += new System.EventHandler(this.Monitor_Tick);
             // 
+            // comboBox_EncDecFunction
+            // 
+            this.comboBox_EncDecFunction.FormattingEnabled = true;
+            this.comboBox_EncDecFunction.Location = new System.Drawing.Point(248, 38);
+            this.comboBox_EncDecFunction.Name = "comboBox_EncDecFunction";
+            this.comboBox_EncDecFunction.Size = new System.Drawing.Size(149, 20);
+            this.comboBox_EncDecFunction.TabIndex = 6;
+            this.comboBox_EncDecFunction.SelectedIndexChanged += new System.EventHandler(this.comboBox_EncDecFunction_SelectedIndexChanged);
+            // 
+            // comboBox_Core
+            // 
+            this.comboBox_Core.FormattingEnabled = true;
+            this.comboBox_Core.Location = new System.Drawing.Point(248, 12);
+            this.comboBox_Core.Name = "comboBox_Core";
+            this.comboBox_Core.Size = new System.Drawing.Size(149, 20);
+            this.comboBox_Core.TabIndex = 7;
+            this.comboBox_Core.SelectedIndexChanged += new System.EventHandler(this.comboBox_Core_SelectedIndexChanged);
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = global::Rijndael文件加密.Properties.Resources.question;
+            this.pictureBox1.Location = new System.Drawing.Point(363, 128);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(34, 31);
+            this.pictureBox1.TabIndex = 8;
+            this.pictureBox1.TabStop = false;
+            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
+            // 
+            // DoubleEncDec
+            // 
+            this.DoubleEncDec.AutoSize = true;
+            this.DoubleEncDec.Checked = true;
+            this.DoubleEncDec.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.DoubleEncDec.Location = new System.Drawing.Point(94, 47);
+            this.DoubleEncDec.Name = "DoubleEncDec";
+            this.DoubleEncDec.Size = new System.Drawing.Size(72, 16);
+            this.DoubleEncDec.TabIndex = 9;
+            this.DoubleEncDec.Text = "雙重加密";
+            this.DoubleEncDec.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(286, 130);
+            this.ClientSize = new System.Drawing.Size(409, 167);
+            this.Controls.Add(this.DoubleEncDec);
+            this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.comboBox_Core);
+            this.Controls.Add(this.comboBox_EncDecFunction);
             this.Controls.Add(this.label_DocSize);
             this.Controls.Add(this.progressBar2);
             this.Controls.Add(this.progressBar1);
@@ -121,6 +170,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "檔案加密";
             this.Load += new System.EventHandler(this.Form1_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -136,6 +186,10 @@
         private System.Windows.Forms.ProgressBar progressBar2;
         private System.Windows.Forms.Label label_DocSize;
         private System.Windows.Forms.Timer Monitor;
+        private System.Windows.Forms.ComboBox comboBox_EncDecFunction;
+        private System.Windows.Forms.ComboBox comboBox_Core;
+        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.CheckBox DoubleEncDec;
     }
 }
 
