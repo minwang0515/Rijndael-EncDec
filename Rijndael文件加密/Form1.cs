@@ -1,5 +1,4 @@
-﻿using EncDec;
-using key;
+﻿using key;
 using System;
 using System.IO;
 using System.Security.Cryptography;
@@ -10,7 +9,6 @@ namespace Rijndael文件加密
 {
     public partial class Form1 : Form
     {
-        EncDeca m_EncDec = new EncDeca();
         FileStream outFile = null;
         FileStream outTempFile = null;
         RijndaelKey m_RijndaelKey = new RijndaelKey();
