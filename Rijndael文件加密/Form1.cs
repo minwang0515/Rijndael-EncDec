@@ -24,7 +24,7 @@ namespace Rijndael文件加密
         double nDocSize = 0;
         double nProgress = 0;
         double dDocSize = 0;
-        readonly string EncDecFilenameExtension = ".minwang";
+        readonly string EncDecFilenameExtension = ".minitplus";
         public int RijndaeEn { get; set; } = 0;
         CryptoStream RijndaelDoc;
         int nCore = 0;
@@ -83,7 +83,7 @@ namespace Rijndael文件加密
                 await Task.Run(() =>
                 {
                     OldDocStr = OldDoc.FileName;
-                    NewDocStr = $@"{OldDocStr}\{Path.GetFileName(OldDoc.FileName)}{EncDecFilenameExtension}";
+                    NewDocStr = $@"{OldDocStr}{EncDecFilenameExtension}";
                     thrStart = new Thread(Encrypt);
                     thrStart.Start();
                 });
@@ -110,7 +110,7 @@ namespace Rijndael文件加密
                 await Task.Run(() =>
                 {
                     OldDocStr = OldDoc.FileName;
-                    NewDocStr = $@"{OldDocStr}\{Path.GetFileName(OldDoc.FileName).Replace(EncDecFilenameExtension,"")}";
+                    NewDocStr = $@"{OldDocStr.Replace(EncDecFilenameExtension,"")}";
                     thrStart = new Thread(Decrypt);
                     thrStart.Start();
                 });
