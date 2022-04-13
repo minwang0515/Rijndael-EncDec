@@ -100,10 +100,6 @@ namespace Rijndael文件加密
             Thread thrStart = null;
             if (OldDoc.ShowDialog() == DialogResult.OK)
             {
-                if (!Directory.Exists(folderPath))
-                {
-                    Directory.CreateDirectory(folderPath);
-                }
                 FileInfo fInfo = new FileInfo(OldDoc.FileName);
                 progressBar1.Maximum = (int)fInfo.Length;
                 progressBar2.Maximum = (int)fInfo.Length;
@@ -147,9 +143,6 @@ namespace Rijndael文件加密
         private void memoryrelease_Tick(object sender, EventArgs e)
         {
             GC.Collect();
-            //progressBar1.PerformStep();
-            //記憶體使用量
-            //MemoryTimerLabel.Text = (Process.GetCurrentProcess().WorkingSet64 / 1024 / 1024).ToString();
         }
 
         private void Monitor_Tick(object sender, EventArgs e)
@@ -167,7 +160,6 @@ namespace Rijndael文件加密
                 
                 try
                 {
-                    //DateTime aaa = DateTime.Now;
                     RijndaelManaged Rijndael;
                     Rijndael = new RijndaelManaged();
                     Rijndael.BlockSize = 256;
@@ -289,7 +281,6 @@ namespace Rijndael文件加密
                     outFile.Close();
                     outFile = null;
                     Directory.Delete(Pathtemp, true);
-                    //MessageBox.Show((DateTime.Now - aaa).ToString(), "加密", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     MessageBox.Show("加密成功", "加密", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 catch (Exception ex)
