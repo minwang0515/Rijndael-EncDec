@@ -24,7 +24,8 @@ namespace Rijndael文件加密
         double nDocSize = 0;
         double nProgress = 0;
         double dDocSize = 0;
-        int RijndaeEn = 0;
+        readonly string EncDecFilenameExtension = ".minwang";
+        public int RijndaeEn { get; set; } = 0;
         CryptoStream RijndaelDoc;
         int nCore = 0;
         int nEncDecFunction = 0;
@@ -72,12 +73,6 @@ namespace Rijndael文件加密
             Thread thrStart = null;
             if (OldDoc.ShowDialog() == DialogResult.OK)
             {
-
-                string folderPath = $@"{Environment.CurrentDirectory}\加密";
-                if (!Directory.Exists(folderPath))
-                {
-                    Directory.CreateDirectory(folderPath);
-                }
                 FileInfo fInfo = new FileInfo(OldDoc.FileName);
                 progressBar1.Maximum = (int)fInfo.Length;
                 progressBar2.Maximum = (int)fInfo.Length;
@@ -88,7 +83,7 @@ namespace Rijndael文件加密
                 await Task.Run(() =>
                 {
                     OldDocStr = OldDoc.FileName;
-                    NewDocStr = $@"{folderPath}\{Path.GetFileName(OldDoc.FileName)}";
+                    NewDocStr = $@"{OldDocStr}\{Path.GetFileName(OldDoc.FileName)}{EncDecFilenameExtension}";
                     thrStart = new Thread(Encrypt);
                     thrStart.Start();
                 });
@@ -105,8 +100,6 @@ namespace Rijndael文件加密
             Thread thrStart = null;
             if (OldDoc.ShowDialog() == DialogResult.OK)
             {
-
-                string folderPath = $@"{Environment.CurrentDirectory}\解密";
                 if (!Directory.Exists(folderPath))
                 {
                     Directory.CreateDirectory(folderPath);
@@ -121,7 +114,7 @@ namespace Rijndael文件加密
                 await Task.Run(() =>
                 {
                     OldDocStr = OldDoc.FileName;
-                    NewDocStr = $@"{folderPath}\{Path.GetFileName(OldDoc.FileName)}";
+                    NewDocStr = $@"{OldDocStr}\{Path.GetFileName(OldDoc.FileName).Replace(EncDecFilenameExtension,"")}";
                     thrStart = new Thread(Decrypt);
                     thrStart.Start();
                 });
@@ -174,7 +167,7 @@ namespace Rijndael文件加密
                 
                 try
                 {
-                    DateTime aaa = DateTime.Now;
+                    //DateTime aaa = DateTime.Now;
                     RijndaelManaged Rijndael;
                     Rijndael = new RijndaelManaged();
                     Rijndael.BlockSize = 256;
@@ -296,7 +289,7 @@ namespace Rijndael文件加密
                     outFile.Close();
                     outFile = null;
                     Directory.Delete(Pathtemp, true);
-                    MessageBox.Show((DateTime.Now - aaa).ToString(), "加密", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    //MessageBox.Show((DateTime.Now - aaa).ToString(), "加密", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     MessageBox.Show("加密成功", "加密", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 catch (Exception ex)
@@ -330,7 +323,6 @@ namespace Rijndael文件加密
 
                 try
                 {
-                    DateTime aaa = DateTime.Now;
                     RijndaelManaged Rijndael;
                     Rijndael = new RijndaelManaged();
                     Rijndael.BlockSize = 256;
@@ -452,7 +444,6 @@ namespace Rijndael文件加密
                     outFile.Close();
                     outFile = null;
                     Directory.Delete(Pathtemp, true);
-                    MessageBox.Show((DateTime.Now - aaa).ToString(), "解密", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     MessageBox.Show("解密成功", "解密", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 catch (Exception ex)
