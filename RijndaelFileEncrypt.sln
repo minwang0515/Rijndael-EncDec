@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rijndael文件加密", "Rijndael文件加密\Rijndael文件加密.csproj", "{DB8768A6-5B1E-43E9-ADB0-8E81FB486F2B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RijndaelFileEncrypt", "RijndaelFileEncrypt\RijndaelFileEncrypt.csproj", "{DB8768A6-5B1E-43E9-ADB0-8E81FB486F2B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

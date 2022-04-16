@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{DB8768A6-5B1E-43E9-ADB0-8E81FB486F2B}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>Rijndael文件加密</RootNamespace>
-    <AssemblyName>Rijndael文件加密</AssemblyName>
+    <RootNamespace>RijndaelFileEncrypt</RootNamespace>
+    <AssemblyName>RijndaelFileEncrypt</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -56,6 +56,10 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Function\Crypt.cs" />
+    <Compile Include="Function\GetMemory.cs" />
+    <Compile Include="Models\FormVariable.cs" />
+    <Compile Include="Models\Memory.cs" />
     <Compile Include="Models\Key.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

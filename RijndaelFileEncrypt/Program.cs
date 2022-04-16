@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Rijndael文件加密
+namespace RijndaelFileEncrypt
 {
     internal static class Program
     {
