@@ -42,7 +42,8 @@ namespace RijndaelFileEncrypt.Function
                             int i = 0;
                             while ((i = src.ReadByte()) != -1)
                             {
-                                OutTempFile.WriteByte((byte)MinEn(i, Dockey.m_Dockey[(byte)Size]));
+                                OutTempFile.WriteByte((byte)MinEn(i, Dockey.m_Dockey[(byte)TotalSize]));
+                                TotalSize++;
                                 Size++;
                             }
                             OutTempFile.Close();
@@ -58,7 +59,10 @@ namespace RijndaelFileEncrypt.Function
                             {
                                 //單核心
                                 for (Size = 0; Size < Oldsrc.Length; Size++)
+                                {
                                     Oldsrc[Size] = (byte)MinEn(Oldsrc[Size], Dockey.m_Dockey[(byte)Size]);
+                                    TotalSize++;
+                                }
                             }
                             else if (Core == 2)
                             {
@@ -69,7 +73,6 @@ namespace RijndaelFileEncrypt.Function
                         }
 
                         Size = 0;
-                        RijndaeEn = (int)DocSize;
 
                         if (EncDecFunction == 1)
                         {
@@ -82,7 +85,9 @@ namespace RijndaelFileEncrypt.Function
                             {
                                 OutFile.WriteByte((byte)MinEn(j, Dockey.m_EnDockey[(byte)Size]));
                                 Size++;
+                                TotalSize++;
                             }
+                            MonitorTime = false;
                         }
                         else if (EncDecFunction == 2)
                         {
@@ -92,7 +97,10 @@ namespace RijndaelFileEncrypt.Function
                             {
                                 //單核心
                                 for (Size = 0; Size < Rijndaebyte.Length; Size++)
+                                {
                                     Rijndaebyte[Size] = (byte)MinEn(Rijndaebyte[Size], Dockey.m_EnDockey[(byte)Size]);
+                                    TotalSize++;
+                                }
                             }
                             else if (Core == 2)
                             {
@@ -100,6 +108,7 @@ namespace RijndaelFileEncrypt.Function
                                 Parallel.For(0, Rijndaebyte.Length, i =>
                                     Rijndaebyte[i] = (byte)MinEn(Rijndaebyte[i], Dockey.m_EnDockey[(byte)i]));
                             }
+                            MonitorTime = false;
                             using (OutFile = new FileStream(NewDocStr, FileMode.Create))
                                 OutFile.Write(Rijndaebyte, 0, Rijndaebyte.Length);
                         }
@@ -116,8 +125,10 @@ namespace RijndaelFileEncrypt.Function
                             while ((j = RijndaelDoc.ReadByte()) != -1)
                             {
                                 OutFile.WriteByte((byte)j);
+                                TotalSize += 1 * 2;
                                 Size++;
                             }
+                            MonitorTime = false;
                         }
                         else if (EncDecFunction == 2)
                         {
@@ -139,6 +150,7 @@ namespace RijndaelFileEncrypt.Function
                     OutFile = null;
                     Directory.Delete(Pathtemp, true);
                     Size = 0;
+                    TotalSize = 0;
                     MessageBox.Show("加密成功", "加密", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 catch (Exception ex)
@@ -170,11 +182,10 @@ namespace RijndaelFileEncrypt.Function
                     if (!Directory.Exists(Pathtemp))
                         Directory.CreateDirectory(Pathtemp);
 
-                    if (DoubleEncDec)//雙層加密
+                    if (DoubleEncDec)//雙層解密
                     {
-                        if (EncDecFunction == 1)
+                        if (EncDecFunction == 1)//磁碟解密
                         {
-                            //磁碟解密
                             src = new FileStream(OldDocStr, FileMode.Open);
 
                             OutTempFile = new FileStream(docPathtemp, FileMode.Create);
@@ -182,22 +193,25 @@ namespace RijndaelFileEncrypt.Function
                             while ((i = src.ReadByte()) != -1)
                             {
                                 OutTempFile.WriteByte((byte)MinEn(i, Dockey.m_EnDockey[(byte)Size]));
+                                TotalSize++;
                                 Size++;
                             }
                             OutTempFile.Close();
                             src.Close();
                             src = new FileStream(docPathtemp, FileMode.Open);
                         }
-                        else
+                        else//記憶體解密
                         {
-                            //記憶體解密
                             Oldsrc = File.ReadAllBytes(OldDocStr);
 
                             if (Core == 1)
                             {
                                 //單核心
                                 for (Size = 0; Size < Oldsrc.Length; Size++)
+                                {
                                     Oldsrc[Size] = (byte)MinEn(Oldsrc[Size], Dockey.m_EnDockey[(byte)Size]);
+                                    TotalSize++;
+                                }
                             }
                             else if (Core == 2)
                             {
@@ -208,30 +222,31 @@ namespace RijndaelFileEncrypt.Function
                         }
 
                         Size = 0;
-                        RijndaeEn = (int)DocSize;
 
-                        if (EncDecFunction == 1)
+                        if (EncDecFunction == 1)//磁碟解密
                         {
-                            //磁碟解密
-
                             RijndaelDoc = new CryptoStream(src, Decryptor, CryptoStreamMode.Read);
                             OutFile = new FileStream(NewDocStr, FileMode.Create);
                             int j = 0;
                             while ((j = RijndaelDoc.ReadByte()) != -1)
                             {
                                 OutFile.WriteByte((byte)MinEn(j, Dockey.m_Dockey[(byte)Size]));
+                                TotalSize++;
                                 Size++;
                             }
+                            MonitorTime = false;
                         }
-                        else if (EncDecFunction == 2)
+                        else if (EncDecFunction == 2)//記憶體解密
                         {
-                            //記憶體解密
                             Rijndaebyte = PerformCryptography(Decryptor, Oldsrc);
                             if (Core == 1)
                             {
                                 //單核心
                                 for (Size = 0; Size < Rijndaebyte.Length; Size++)
+                                {
                                     Rijndaebyte[Size] = (byte)MinEn(Rijndaebyte[Size], Dockey.m_Dockey[(byte)Size]);
+                                    TotalSize++;
+                                }
                             }
                             else if (Core == 2)
                             {
@@ -239,6 +254,7 @@ namespace RijndaelFileEncrypt.Function
                                 Parallel.For(0, Rijndaebyte.Length, i =>
                                         Rijndaebyte[i] = (byte)MinEn(Rijndaebyte[i], Dockey.m_Dockey[(byte)i]));
                             }
+                            MonitorTime = false;
                             using (OutFile = new FileStream(NewDocStr, FileMode.Create))
                                 OutFile.Write(Rijndaebyte, 0, Rijndaebyte.Length);
                         }
@@ -255,8 +271,10 @@ namespace RijndaelFileEncrypt.Function
                             while ((j = RijndaelDoc.ReadByte()) != -1)
                             {
                                 OutFile.WriteByte((byte)j);
+                                TotalSize += 1 * 2;
                                 Size++;
                             }
+                            MonitorTime = false;
                         }
                         else if (EncDecFunction == 2)
                         {
@@ -278,6 +296,7 @@ namespace RijndaelFileEncrypt.Function
                     OutFile = null;
                     Directory.Delete(Pathtemp, true);
                     Size = 0;
+                    TotalSize = 0;
                     MessageBox.Show("解密成功", "解密", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 catch (Exception ex)
@@ -303,6 +322,7 @@ namespace RijndaelFileEncrypt.Function
                 {
                     RijndaelDoc.Write(data, 0, data.Length);
                     RijndaelDoc.FlushFinalBlock();
+                    //data = new byte[0];
                     return memoryStream.ToArray();
                 }
             }

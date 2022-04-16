@@ -15,6 +15,7 @@ namespace RijndaelFileEncrypt.Models
         public string Unit { get; set; } = null;
         public string UnitDoc { get; set; } = null;
         public static long Size { get; set; } = 0;
+        public static long TotalSize { get; set; } = 0;
         public static long FileSize { get; set; } = 0;
         public double DocSize { get; set; } = 0;
         public double Progress { get; set; } = 0;
@@ -24,5 +25,7 @@ namespace RijndaelFileEncrypt.Models
         public static int Core { get; set; } = 0;
         public static int EncDecFunction { get; set; } = 0;
         public static bool DoubleEncDec { get; set; } = false;
+
+        public static bool MonitorTime { get; set; } = false;
     }
 }

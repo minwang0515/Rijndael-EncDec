@@ -27,13 +27,18 @@ namespace RijndaelFileEncrypt
             m_Form.Unit = null;
             if (OldDoc.ShowDialog() == DialogResult.OK)
             {
+                progressBar1.Value = 0;
+                progressBar2.Value = 0;
                 FileInfo fInfo = new FileInfo(OldDoc.FileName);
-                progressBar1.Maximum = 100;
-                progressBar2.Maximum = 200;
+
+                //為了讓進度條動畫更順暢所以設定10000
+                progressBar1.Maximum = 10000;
+                progressBar2.Maximum = 10000;
                 m_Form.DocSize = fInfo.Length;
                 FormVariable.FileSize = fInfo.Length;
                 FormatBytes(fInfo.Length);
                 Monitor.Start();
+                FormVariable.MonitorTime = true;
 
                 FormVariable.DoubleEncDec = DoubleEncDec.Checked;
 
@@ -62,11 +67,15 @@ namespace RijndaelFileEncrypt
             if (OldDoc.ShowDialog() == DialogResult.OK)
             {
                 FileInfo fInfo = new FileInfo(OldDoc.FileName);
-                progressBar1.Maximum = (int)fInfo.Length;
-                progressBar2.Maximum = (int)fInfo.Length;
+
+                //為了讓進度條動畫更順暢所以設定10000
+                progressBar1.Maximum = 10000;
+                progressBar2.Maximum = 10000;
+                FormVariable.FileSize = fInfo.Length;
                 m_Form.DocSize = fInfo.Length;
                 FormatBytes(fInfo.Length);
                 Monitor.Start();
+                FormVariable.MonitorTime = true;
 
                 FormVariable.DoubleEncDec = DoubleEncDec.Checked;
 
@@ -84,10 +93,19 @@ namespace RijndaelFileEncrypt
 
         public void Progress()
         {
-            if (progressBar1.Maximum > FormVariable.Size)
+            double Ppercent =  (double)FormVariable.TotalSize / ((double)FormVariable.FileSize *2) * 10000;
+            double Ppercent2 = (double)FormVariable.Size / (double)FormVariable.FileSize * 10000;
+            if (Ppercent <= progressBar1.Maximum)
             {
-                Label_DocSize.Text = $@"{m_Form.Progress:.00} {m_Form.UnitDoc} / {m_Form.DocSize:.00} {m_Form.Unit}";
-                progressBar1.Value = (int)FormVariable.Size;
+                string strTemp;
+                if (m_Form.Progress.ToString(".00") == ".00")
+                    strTemp = m_Form.Progress.ToString();
+                else
+                    strTemp = m_Form.Progress.ToString(".00");
+
+                Label_DocSize.Text = $@"{strTemp} {m_Form.UnitDoc} / {m_Form.DocSize:.00} {m_Form.Unit}";
+                progressBar1.Value = (int)Ppercent;
+                progressBar2.Value = (int)Ppercent2;
             }
         }
 
@@ -121,16 +139,17 @@ namespace RijndaelFileEncrypt
 
         private void Monitor_Tick(object sender, EventArgs e)
         {
-            if (FormVariable.Size > 0)
+            if (FormVariable.MonitorTime)
             {
                 FormatBytes(FormVariable.Size);
                 Progress();
             }
             else
             {
-                FormatBytes(progressBar1.Maximum);
+                FormatBytes(FormVariable.FileSize);
                 Label_DocSize.Text = $@"{m_Form.Progress:.00} {m_Form.UnitDoc} / {m_Form.DocSize:.00} {m_Form.Unit}";
                 progressBar1.Value = progressBar1.Maximum;
+                progressBar2.Value = progressBar2.Maximum;
                 Monitor.Stop();
             }
         }
@@ -156,22 +175,24 @@ namespace RijndaelFileEncrypt
 單核心加密：加密速度慢但不影響電腦效能
 多核心加密：加密速度快但嚴重影響電腦效能
 
-以上選項如果沒有使用雙重加密只透過Rijndael加密都不會吃效能
+以上選項如果只透過Rijndael加密都不會吃效能
 
 記憶體加密：加密速度極快，使用記憶體進行加密速度極快
 　磁碟加密：加密速度極慢，透過實體應碟加密(暫存空間)
 
 
-雙重加密：
+雙層加密：
 透過自定義byte 1~255 共2類 每類共256組密碼
 先將檔案透過第一類KEY進行記憶體或磁碟
 記憶體將存至記憶體，磁碟將存至(暫存空間)
 然後將加密後的檔案，透過Rijndael進行加密
 加密後透過第二類KEY進行加密，共加密3次。
 
-沒有雙重加密的話僅透過Rijndael進行加密加密。
+沒有雙層加密的話僅透過Rijndael進行加密加密。
 
-有雙重加密的檔案，只能用雙重解密否則無法解密
+雙層加密的檔案只能透過雙層解密
+單層加密的檔案也是只能夠過單層解密
+
 請妥善保管雙重加密KEY，遺失任何密鑰將無法解密
 順序錯誤或任一組KEY錯誤都無法解密。
 ", "說明", MessageBoxButtons.OK, MessageBoxIcon.Warning);

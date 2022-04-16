@@ -99,9 +99,9 @@
             this.Label_DocSize.AutoSize = true;
             this.Label_DocSize.Location = new System.Drawing.Point(12, 147);
             this.Label_DocSize.Name = "Label_DocSize";
-            this.Label_DocSize.Size = new System.Drawing.Size(20, 12);
+            this.Label_DocSize.Size = new System.Drawing.Size(66, 12);
             this.Label_DocSize.TabIndex = 5;
-            this.Label_DocSize.Text = "0/0";
+            this.Label_DocSize.Text = "0 byte/0 byte";
             this.Label_DocSize.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // comboBox_EncDecFunction
@@ -149,7 +149,7 @@
             // Monitor
             // 
             this.Monitor.Enabled = true;
-            this.Monitor.Interval = 50;
+            this.Monitor.Interval = 1;
             this.Monitor.Tick += new System.EventHandler(this.Monitor_Tick);
             // 
             // Form1
