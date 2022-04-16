@@ -57,9 +57,8 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="Function\Crypt.cs" />
-    <Compile Include="Function\GetMemory.cs" />
+    <Compile Include="Models\GetMemory.cs" />
     <Compile Include="Models\FormVariable.cs" />
-    <Compile Include="Models\Memory.cs" />
     <Compile Include="Models\Key.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

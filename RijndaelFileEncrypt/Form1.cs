@@ -27,13 +27,13 @@ namespace RijndaelFileEncrypt
             m_Form.Unit = null;
             if (OldDoc.ShowDialog() == DialogResult.OK)
             {
-                progressBar1.Value = 0;
-                progressBar2.Value = 0;
+                ProgressBar_Total.Value = 0;
+                ProgressBar.Value = 0;
                 FileInfo fInfo = new FileInfo(OldDoc.FileName);
 
                 //為了讓進度條動畫更順暢所以設定10000
-                progressBar1.Maximum = 10000;
-                progressBar2.Maximum = 10000;
+                ProgressBar_Total.Maximum = 10000;
+                ProgressBar.Maximum = 10000;
                 m_Form.DocSize = fInfo.Length;
                 FormVariable.FileSize = fInfo.Length;
                 FormatBytes(fInfo.Length);
@@ -69,8 +69,8 @@ namespace RijndaelFileEncrypt
                 FileInfo fInfo = new FileInfo(OldDoc.FileName);
 
                 //為了讓進度條動畫更順暢所以設定10000
-                progressBar1.Maximum = 10000;
-                progressBar2.Maximum = 10000;
+                ProgressBar_Total.Maximum = 10000;
+                ProgressBar.Maximum = 10000;
                 FormVariable.FileSize = fInfo.Length;
                 m_Form.DocSize = fInfo.Length;
                 FormatBytes(fInfo.Length);
@@ -93,9 +93,9 @@ namespace RijndaelFileEncrypt
 
         public void Progress()
         {
-            double Ppercent =  (double)FormVariable.TotalSize / ((double)FormVariable.FileSize *2) * 10000;
-            double Ppercent2 = (double)FormVariable.Size / (double)FormVariable.FileSize * 10000;
-            if (Ppercent <= progressBar1.Maximum)
+            double PpercentTotal =  (double)FormVariable.TotalSize / ((double)FormVariable.FileSize *2) * 10000;
+            double Ppercent = (double)FormVariable.Size / (double)FormVariable.FileSize * 10000;
+            if (Ppercent <= ProgressBar_Total.Maximum)
             {
                 string strTemp;
                 if (m_Form.Progress.ToString(".00") == ".00")
@@ -104,11 +104,25 @@ namespace RijndaelFileEncrypt
                     strTemp = m_Form.Progress.ToString(".00");
 
                 Label_DocSize.Text = $@"{strTemp} {m_Form.UnitDoc} / {m_Form.DocSize:.00} {m_Form.Unit}";
-                progressBar1.Value = (int)Ppercent;
-                progressBar2.Value = (int)Ppercent2;
+
+                if (Ppercent == 0)
+                    strTemp = "0.00%";
+                else
+                    strTemp = $"{TwoDecimalPlaces(Ppercent / 100):.00}%";
+
+                Label_Total.Text = $"{TwoDecimalPlaces(PpercentTotal / 100):.00}%";
+                Label_ProgressBar.Text = strTemp;
+
+                ProgressBar_Total.Value = (int)PpercentTotal;
+                ProgressBar.Value = (int)Ppercent;
             }
         }
-
+        private double TwoDecimalPlaces(double Twodouble)
+        {
+            Twodouble *= 100;
+            Twodouble = (double)(int)Twodouble / 100;
+            return Twodouble;
+        }
         private void FormatBytes(long bytes)
         {
             string[] Suffix = { "byte", "KB", "MB", "GB", "TB" };
@@ -117,8 +131,8 @@ namespace RijndaelFileEncrypt
             for (i = 0; i < Suffix.Length && bytes >= 1024; i++, bytes /= 1024)
                 dblSByte = bytes / 1024.0;
 
-            dblSByte *= 100;
-            dblSByte = (double)(int)dblSByte / 100;
+            //為了精準到小數點後2位
+            dblSByte = TwoDecimalPlaces(dblSByte);
 
             if (m_Form.DocSize != 0 && m_Form.Unit == null)
             {
@@ -132,9 +146,27 @@ namespace RijndaelFileEncrypt
             }
         }
 
-        private void memoryrelease_Tick(object sender, EventArgs e)
+        private async void Memoryrelease_Tick(object sender, EventArgs e)
         {
+            await GetStrMemory();
             GC.Collect();
+        }
+
+        private async Task GetStrMemory()
+        {
+            GetMemory memory = new GetMemory();
+            string StrGetUsedPhys = null;
+            string StrGetTotalPhys = null;
+            string StrGetUsage = null;
+            string StrGetForm = null;
+            await Task.Run(() =>
+            {
+                StrGetUsedPhys = memory.StrGetUsedPhys;
+                StrGetTotalPhys = memory.StrGetTotalPhys;
+                StrGetUsage = memory.StrGetUsage;
+                StrGetForm = memory.StrGetForm;
+            });
+            Label_Memory.Text = $"記憶體\r\n總容量：{StrGetTotalPhys}\r\n使用中：{StrGetUsedPhys}\r\n程式記憶體：{StrGetForm}\r\n總使用率：{StrGetUsage}";
         }
 
         private void Monitor_Tick(object sender, EventArgs e)
@@ -148,16 +180,17 @@ namespace RijndaelFileEncrypt
             {
                 FormatBytes(FormVariable.FileSize);
                 Label_DocSize.Text = $@"{m_Form.Progress:.00} {m_Form.UnitDoc} / {m_Form.DocSize:.00} {m_Form.Unit}";
-                progressBar1.Value = progressBar1.Maximum;
-                progressBar2.Value = progressBar2.Maximum;
+                Label_Total.Text = $"{TwoDecimalPlaces(ProgressBar_Total.Maximum / 100):.00}%";
+                Label_ProgressBar.Text = $"{TwoDecimalPlaces(ProgressBar.Maximum / 100):.00}%";
+                ProgressBar_Total.Value = ProgressBar_Total.Maximum;
+                ProgressBar.Value = ProgressBar.Maximum;
                 Monitor.Stop();
             }
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private async void Form1_Load(object sender, EventArgs e)
         {
             Monitor.Stop();
-
             comboBox_Core.Items.Add("請選擇");
             comboBox_Core.Items.Add("單核心　　　(加密慢)");
             comboBox_Core.Items.Add("多核心　　　(加密快)");
@@ -168,6 +201,7 @@ namespace RijndaelFileEncrypt
 
             comboBox_Core.SelectedIndex = 1;
             comboBox_EncDecFunction.SelectedIndex = 1;
+            await GetStrMemory();
         }
         private void pictureBox1_Click(object sender, EventArgs e)
         {

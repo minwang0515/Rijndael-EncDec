@@ -2,7 +2,6 @@
 using System;
 using System.IO;
 using System.Security.Cryptography;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -72,8 +71,6 @@ namespace RijndaelFileEncrypt.Function
                             }
                         }
 
-                        Size = 0;
-
                         if (EncDecFunction == 1)
                         {
                             //磁碟加密
@@ -81,6 +78,7 @@ namespace RijndaelFileEncrypt.Function
                             RijndaelDoc = new CryptoStream(src, Encrypt, CryptoStreamMode.Read);
                             OutFile = new FileStream(NewDocStr, FileMode.Create);
                             int j = 0;
+                            Size = 0;
                             while ((j = RijndaelDoc.ReadByte()) != -1)
                             {
                                 OutFile.WriteByte((byte)MinEn(j, Dockey.m_EnDockey[(byte)Size]));
@@ -221,13 +219,12 @@ namespace RijndaelFileEncrypt.Function
                             }
                         }
 
-                        Size = 0;
-
                         if (EncDecFunction == 1)//磁碟解密
                         {
                             RijndaelDoc = new CryptoStream(src, Decryptor, CryptoStreamMode.Read);
                             OutFile = new FileStream(NewDocStr, FileMode.Create);
                             int j = 0;
+                            Size = 0;
                             while ((j = RijndaelDoc.ReadByte()) != -1)
                             {
                                 OutFile.WriteByte((byte)MinEn(j, Dockey.m_Dockey[(byte)Size]));
@@ -242,6 +239,7 @@ namespace RijndaelFileEncrypt.Function
                             if (Core == 1)
                             {
                                 //單核心
+
                                 for (Size = 0; Size < Rijndaebyte.Length; Size++)
                                 {
                                     Rijndaebyte[Size] = (byte)MinEn(Rijndaebyte[Size], Dockey.m_Dockey[(byte)Size]);
@@ -322,7 +320,6 @@ namespace RijndaelFileEncrypt.Function
                 {
                     RijndaelDoc.Write(data, 0, data.Length);
                     RijndaelDoc.FlushFinalBlock();
-                    //data = new byte[0];
                     return memoryStream.ToArray();
                 }
             }
