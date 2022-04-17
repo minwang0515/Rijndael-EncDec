@@ -30,10 +30,6 @@ namespace RijndaelFileEncrypt
                 ProgressBar_Total.Value = 0;
                 ProgressBar.Value = 0;
                 FileInfo fInfo = new FileInfo(OldDoc.FileName);
-
-                //為了讓進度條動畫更順暢所以設定10000
-                ProgressBar_Total.Maximum = 10000;
-                ProgressBar.Maximum = 10000;
                 m_Form.DocSize = fInfo.Length;
                 FormVariable.FileSize = fInfo.Length;
                 FormatBytes(fInfo.Length);
@@ -58,7 +54,7 @@ namespace RijndaelFileEncrypt
         {
             OpenFileDialog OldDoc = new OpenFileDialog();
             OldDoc.InitialDirectory = @".\";
-            OldDoc.Filter = "解密 (*.*)|*.*";
+            OldDoc.Filter = $"專屬加密檔案 (*{m_Form.EncDecFilenameExtension}*)|*{m_Form.EncDecFilenameExtension}*|所有檔案 (*.*)|*.*";
             OldDoc.Title = "解密";
             OldDoc.RestoreDirectory = true;
             Thread thrStart = null;
@@ -67,10 +63,6 @@ namespace RijndaelFileEncrypt
             if (OldDoc.ShowDialog() == DialogResult.OK)
             {
                 FileInfo fInfo = new FileInfo(OldDoc.FileName);
-
-                //為了讓進度條動畫更順暢所以設定10000
-                ProgressBar_Total.Maximum = 10000;
-                ProgressBar.Maximum = 10000;
                 FormVariable.FileSize = fInfo.Length;
                 m_Form.DocSize = fInfo.Length;
                 FormatBytes(fInfo.Length);
@@ -93,11 +85,12 @@ namespace RijndaelFileEncrypt
 
         public void Progress()
         {
-            double PpercentTotal =  (double)FormVariable.TotalSize / ((double)FormVariable.FileSize *2) * 10000;
-            double Ppercent = (double)FormVariable.Size / (double)FormVariable.FileSize * 10000;
+            double Ppercent = (double)FormVariable.Size / (double)FormVariable.FileSize * 100;
+            double PpercentTotal =  (double)FormVariable.TotalSize / ((double)FormVariable.FileSize *2) * 100;
             if (Ppercent <= ProgressBar_Total.Maximum)
             {
                 string strTemp;
+                string strTemp2;
                 if (m_Form.Progress.ToString(".00") == ".00")
                     strTemp = m_Form.Progress.ToString();
                 else
@@ -105,16 +98,21 @@ namespace RijndaelFileEncrypt
 
                 Label_DocSize.Text = $@"{strTemp} {m_Form.UnitDoc} / {m_Form.DocSize:.00} {m_Form.Unit}";
 
-                if (Ppercent == 0)
-                    strTemp = "0.00%";
+                if (Ppercent < 1)
+                    strTemp = $"0{TwoDecimalPlaces(Ppercent):.00}%";
                 else
-                    strTemp = $"{TwoDecimalPlaces(Ppercent / 100):.00}%";
+                    strTemp = $"{TwoDecimalPlaces(Ppercent):.00}%";
 
-                Label_Total.Text = $"{TwoDecimalPlaces(PpercentTotal / 100):.00}%";
+                if(PpercentTotal < 1)
+                    strTemp2 = $"0{TwoDecimalPlaces(PpercentTotal):.00}%";
+                else
+                    strTemp2 = $"{TwoDecimalPlaces(PpercentTotal):.00}%";
+
                 Label_ProgressBar.Text = strTemp;
-
-                ProgressBar_Total.Value = (int)PpercentTotal;
-                ProgressBar.Value = (int)Ppercent;
+                Label_Total.Text = strTemp2;
+               
+                ProgressBar.Value = (int)Ppercent * ProgressBar.Maximum / 100;
+                ProgressBar_Total.Value = (int)PpercentTotal * ProgressBar_Total.Maximum / 100;
             }
         }
         private double TwoDecimalPlaces(double Twodouble)
@@ -181,8 +179,8 @@ namespace RijndaelFileEncrypt
                 Monitor.Stop();
                 FormatBytes(FormVariable.FileSize);
                 Label_DocSize.Text = $@"{m_Form.Progress:.00} {m_Form.UnitDoc} / {m_Form.DocSize:.00} {m_Form.Unit}";
-                Label_Total.Text = $"{TwoDecimalPlaces(ProgressBar_Total.Maximum / 100):.00}%";
-                Label_ProgressBar.Text = $"{TwoDecimalPlaces(ProgressBar.Maximum / 100):.00}%";
+                Label_Total.Text = "100%";
+                Label_ProgressBar.Text = "100%";
                 ProgressBar_Total.Value = ProgressBar_Total.Maximum;
                 ProgressBar.Value = ProgressBar.Maximum;
             }

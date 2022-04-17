@@ -90,6 +90,8 @@
             // ProgressBar_Total
             // 
             this.ProgressBar_Total.Location = new System.Drawing.Point(53, 108);
+            this.ProgressBar_Total.MarqueeAnimationSpeed = 1;
+            this.ProgressBar_Total.Maximum = 100000;
             this.ProgressBar_Total.Name = "ProgressBar_Total";
             this.ProgressBar_Total.Size = new System.Drawing.Size(325, 16);
             this.ProgressBar_Total.TabIndex = 3;
@@ -97,6 +99,8 @@
             // ProgressBar
             // 
             this.ProgressBar.Location = new System.Drawing.Point(53, 86);
+            this.ProgressBar.MarqueeAnimationSpeed = 1;
+            this.ProgressBar.Maximum = 100000;
             this.ProgressBar.Name = "ProgressBar";
             this.ProgressBar.Size = new System.Drawing.Size(325, 16);
             this.ProgressBar.TabIndex = 4;

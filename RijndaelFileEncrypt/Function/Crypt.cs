@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using System.Security.Cryptography;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -78,6 +79,7 @@ namespace RijndaelFileEncrypt.Function
                             RijndaelDoc = new CryptoStream(src, Encrypt, CryptoStreamMode.Read);
                             OutFile = new FileStream(NewDocStr, FileMode.Create);
                             int j = 0;
+                            Thread.Sleep(500);
                             Size = 0;
                             while ((j = RijndaelDoc.ReadByte()) != -1)
                             {
