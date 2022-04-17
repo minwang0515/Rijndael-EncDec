@@ -178,13 +178,13 @@ namespace RijndaelFileEncrypt
             }
             else
             {
+                Monitor.Stop();
                 FormatBytes(FormVariable.FileSize);
                 Label_DocSize.Text = $@"{m_Form.Progress:.00} {m_Form.UnitDoc} / {m_Form.DocSize:.00} {m_Form.Unit}";
                 Label_Total.Text = $"{TwoDecimalPlaces(ProgressBar_Total.Maximum / 100):.00}%";
                 Label_ProgressBar.Text = $"{TwoDecimalPlaces(ProgressBar.Maximum / 100):.00}%";
                 ProgressBar_Total.Value = ProgressBar_Total.Maximum;
                 ProgressBar.Value = ProgressBar.Maximum;
-                Monitor.Stop();
             }
         }
 

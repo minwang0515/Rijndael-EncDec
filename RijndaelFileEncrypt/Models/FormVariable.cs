@@ -8,8 +8,8 @@ namespace RijndaelFileEncrypt.Models
     {
         public FileStream OutFile { get; set; } = null;
         public FileStream OutTempFile { get; set; } = null;
-        internal RijndaelKey RijndaelKey { get; set; } = new RijndaelKey();
-        internal Dockey Dockey { get; set; } = new Dockey();
+        internal CRijndaelKey RijndaelKey { get; set; } = new CRijndaelKey();
+        internal CDockey Dockey { get; set; } = new CDockey();
         public static string OldDocStr { get; set; } = null;
         public static string NewDocStr { get; set; } = null;
         public string Unit { get; set; } = null;

@@ -19,7 +19,7 @@ namespace RijndaelFileEncrypt.Function
                     RijndaelManaged Rijndael;
                     Rijndael = new RijndaelManaged();
                     Rijndael.BlockSize = 256;
-                    ICryptoTransform Encrypt = Rijndael.CreateEncryptor(RijndaelKey.m_RijndaelKey, RijndaelKey.m_RijndaelVector);
+                    ICryptoTransform Encrypt = Rijndael.CreateEncryptor(RijndaelKey.RijndaelKey, RijndaelKey.RijndaelVector);
 
                     byte[] Rijndaebyte;
                     byte[] Oldsrc = null;
@@ -41,7 +41,7 @@ namespace RijndaelFileEncrypt.Function
                             int i = 0;
                             while ((i = src.ReadByte()) != -1)
                             {
-                                OutTempFile.WriteByte((byte)MinEn(i, Dockey.m_Dockey[(byte)TotalSize]));
+                                OutTempFile.WriteByte((byte)MinEn(i, Dockey.OneDockey[(byte)TotalSize]));
                                 TotalSize++;
                                 Size++;
                             }
@@ -59,7 +59,7 @@ namespace RijndaelFileEncrypt.Function
                                 //單核心
                                 for (Size = 0; Size < Oldsrc.Length; Size++)
                                 {
-                                    Oldsrc[Size] = (byte)MinEn(Oldsrc[Size], Dockey.m_Dockey[(byte)Size]);
+                                    Oldsrc[Size] = (byte)MinEn(Oldsrc[Size], Dockey.OneDockey[(byte)Size]);
                                     TotalSize++;
                                 }
                             }
@@ -67,7 +67,7 @@ namespace RijndaelFileEncrypt.Function
                             {
                                 //多核心
                                 Parallel.For(0, Oldsrc.Length, i =>
-                                    Oldsrc[i] = (byte)MinEn(Oldsrc[i], Dockey.m_Dockey[(byte)i]));
+                                    Oldsrc[i] = (byte)MinEn(Oldsrc[i], Dockey.OneDockey[(byte)i]));
                             }
                         }
 
@@ -81,9 +81,10 @@ namespace RijndaelFileEncrypt.Function
                             Size = 0;
                             while ((j = RijndaelDoc.ReadByte()) != -1)
                             {
-                                OutFile.WriteByte((byte)MinEn(j, Dockey.m_EnDockey[(byte)Size]));
-                                Size++;
+                                OutFile.WriteByte((byte)MinEn(j, Dockey.TwoDockey[(byte)Size]));
                                 TotalSize++;
+                                Size++;
+                                
                             }
                             MonitorTime = false;
                         }
@@ -96,7 +97,7 @@ namespace RijndaelFileEncrypt.Function
                                 //單核心
                                 for (Size = 0; Size < Rijndaebyte.Length; Size++)
                                 {
-                                    Rijndaebyte[Size] = (byte)MinEn(Rijndaebyte[Size], Dockey.m_EnDockey[(byte)Size]);
+                                    Rijndaebyte[Size] = (byte)MinEn(Rijndaebyte[Size], Dockey.TwoDockey[(byte)Size]);
                                     TotalSize++;
                                 }
                             }
@@ -104,7 +105,7 @@ namespace RijndaelFileEncrypt.Function
                             {
                                 //多核心
                                 Parallel.For(0, Rijndaebyte.Length, i =>
-                                    Rijndaebyte[i] = (byte)MinEn(Rijndaebyte[i], Dockey.m_EnDockey[(byte)i]));
+                                    Rijndaebyte[i] = (byte)MinEn(Rijndaebyte[i], Dockey.TwoDockey[(byte)i]));
                             }
                             MonitorTime = false;
                             using (OutFile = new FileStream(NewDocStr, FileMode.Create))
@@ -169,7 +170,7 @@ namespace RijndaelFileEncrypt.Function
                     RijndaelManaged Rijndael;
                     Rijndael = new RijndaelManaged();
                     Rijndael.BlockSize = 256;
-                    ICryptoTransform Decryptor = Rijndael.CreateDecryptor(RijndaelKey.m_RijndaelKey, RijndaelKey.m_RijndaelVector);
+                    ICryptoTransform Decryptor = Rijndael.CreateDecryptor(RijndaelKey.RijndaelKey, RijndaelKey.RijndaelVector);
 
                     byte[] Rijndaebyte;
                     byte[] Oldsrc = null;
@@ -190,7 +191,7 @@ namespace RijndaelFileEncrypt.Function
                             int i = 0;
                             while ((i = src.ReadByte()) != -1)
                             {
-                                OutTempFile.WriteByte((byte)MinEn(i, Dockey.m_EnDockey[(byte)Size]));
+                                OutTempFile.WriteByte((byte)MinEn(i, Dockey.TwoDockey[(byte)Size]));
                                 TotalSize++;
                                 Size++;
                             }
@@ -207,7 +208,7 @@ namespace RijndaelFileEncrypt.Function
                                 //單核心
                                 for (Size = 0; Size < Oldsrc.Length; Size++)
                                 {
-                                    Oldsrc[Size] = (byte)MinEn(Oldsrc[Size], Dockey.m_EnDockey[(byte)Size]);
+                                    Oldsrc[Size] = (byte)MinEn(Oldsrc[Size], Dockey.TwoDockey[(byte)Size]);
                                     TotalSize++;
                                 }
                             }
@@ -215,7 +216,7 @@ namespace RijndaelFileEncrypt.Function
                             {
                                 //多核心
                                 Parallel.For(0, Oldsrc.Length, i =>
-                                        Oldsrc[i] = (byte)MinEn(Oldsrc[i], Dockey.m_EnDockey[(byte)i]));
+                                        Oldsrc[i] = (byte)MinEn(Oldsrc[i], Dockey.TwoDockey[(byte)i]));
                             }
                         }
 
@@ -227,7 +228,7 @@ namespace RijndaelFileEncrypt.Function
                             Size = 0;
                             while ((j = RijndaelDoc.ReadByte()) != -1)
                             {
-                                OutFile.WriteByte((byte)MinEn(j, Dockey.m_Dockey[(byte)Size]));
+                                OutFile.WriteByte((byte)MinEn(j, Dockey.OneDockey[(byte)Size]));
                                 TotalSize++;
                                 Size++;
                             }
@@ -236,21 +237,18 @@ namespace RijndaelFileEncrypt.Function
                         else if (EncDecFunction == 2)//記憶體解密
                         {
                             Rijndaebyte = PerformCryptography(Decryptor, Oldsrc);
-                            if (Core == 1)
+                            if (Core == 1)//單核心
                             {
-                                //單核心
-
                                 for (Size = 0; Size < Rijndaebyte.Length; Size++)
                                 {
-                                    Rijndaebyte[Size] = (byte)MinEn(Rijndaebyte[Size], Dockey.m_Dockey[(byte)Size]);
+                                    Rijndaebyte[Size] = (byte)MinEn(Rijndaebyte[Size], Dockey.OneDockey[(byte)Size]);
                                     TotalSize++;
                                 }
                             }
-                            else if (Core == 2)
+                            else if (Core == 2)//多核心
                             {
-                                //多核心
                                 Parallel.For(0, Rijndaebyte.Length, i =>
-                                        Rijndaebyte[i] = (byte)MinEn(Rijndaebyte[i], Dockey.m_Dockey[(byte)i]));
+                                        Rijndaebyte[i] = (byte)MinEn(Rijndaebyte[i], Dockey.OneDockey[(byte)i]));
                             }
                             MonitorTime = false;
                             using (OutFile = new FileStream(NewDocStr, FileMode.Create))
