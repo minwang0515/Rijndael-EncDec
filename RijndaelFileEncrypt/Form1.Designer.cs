@@ -121,7 +121,7 @@
             this.comboBox_EncDecFunction.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox_EncDecFunction.ForeColor = System.Drawing.Color.Black;
             this.comboBox_EncDecFunction.FormattingEnabled = true;
-            this.comboBox_EncDecFunction.Location = new System.Drawing.Point(229, 38);
+            this.comboBox_EncDecFunction.Location = new System.Drawing.Point(272, 38);
             this.comboBox_EncDecFunction.Name = "comboBox_EncDecFunction";
             this.comboBox_EncDecFunction.Size = new System.Drawing.Size(149, 20);
             this.comboBox_EncDecFunction.TabIndex = 6;
@@ -133,7 +133,7 @@
             this.comboBox_Core.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox_Core.ForeColor = System.Drawing.Color.Black;
             this.comboBox_Core.FormattingEnabled = true;
-            this.comboBox_Core.Location = new System.Drawing.Point(229, 12);
+            this.comboBox_Core.Location = new System.Drawing.Point(272, 12);
             this.comboBox_Core.Name = "comboBox_Core";
             this.comboBox_Core.Size = new System.Drawing.Size(149, 20);
             this.comboBox_Core.TabIndex = 7;
@@ -155,7 +155,7 @@
             this.DoubleEncDec.Checked = true;
             this.DoubleEncDec.CheckState = System.Windows.Forms.CheckState.Checked;
             this.DoubleEncDec.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.DoubleEncDec.Location = new System.Drawing.Point(306, 64);
+            this.DoubleEncDec.Location = new System.Drawing.Point(349, 64);
             this.DoubleEncDec.Name = "DoubleEncDec";
             this.DoubleEncDec.Size = new System.Drawing.Size(72, 16);
             this.DoubleEncDec.TabIndex = 9;
@@ -231,6 +231,7 @@
             this.Controls.Add(this.But_Decrypt);
             this.Controls.Add(this.But_Encrypt);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "檔案加密";
