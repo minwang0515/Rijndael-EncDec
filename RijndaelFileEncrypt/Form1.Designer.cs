@@ -233,7 +233,7 @@
             this.MaximizeBox = false;
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "檔案加密";
+            this.Text = "檔案加解密工具";
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.PictureBox_Help)).EndInit();
             this.ResumeLayout(false);
