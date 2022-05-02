@@ -34,9 +34,10 @@ namespace RijndaelFileEncrypt
                 FormVariable.FileSize = fInfo.Length;
                 FormatBytes(fInfo.Length);
                 Monitor.Start();
+                ElementEnabled(false);
                 FormVariable.MonitorTime = true;
 
-                FormVariable.DoubleEncDec = DoubleEncDec.Checked;
+                FormVariable.DoubleEncDec = CheckBox_DoubleEncDec.Checked;
 
                 await Task.Run(() =>
                 {
@@ -49,7 +50,6 @@ namespace RijndaelFileEncrypt
                 });
             }
         }
-
         private async void DecryptBut_Click(object sender, EventArgs e)
         {
             OpenFileDialog OldDoc = new OpenFileDialog();
@@ -67,14 +67,15 @@ namespace RijndaelFileEncrypt
                 m_Form.DocSize = fInfo.Length;
                 FormatBytes(fInfo.Length);
                 Monitor.Start();
+                ElementEnabled(false);
                 FormVariable.MonitorTime = true;
 
-                FormVariable.DoubleEncDec = DoubleEncDec.Checked;
+                FormVariable.DoubleEncDec = CheckBox_DoubleEncDec.Checked;
 
                 await Task.Run(() =>
                 {
                     FormVariable.OldDocStr = OldDoc.FileName;
-                    FormVariable.NewDocStr = $@"{FormVariable.OldDocStr.Replace(m_Form.EncDecFilenameExtension,"")}";
+                    FormVariable.NewDocStr = $@"{FormVariable.OldDocStr.Replace(m_Form.EncDecFilenameExtension, "")}";
 
                     Crypt Crypt = new Crypt();
                     thrStart = new Thread(Crypt.Decrypt);
@@ -83,7 +84,16 @@ namespace RijndaelFileEncrypt
             }
         }
 
-        public void Progress()
+        private void ElementEnabled(bool Enabled)
+        {
+            Button_Encrypt.Enabled = Enabled;
+            Button_Decrypt.Enabled = Enabled;
+            comboBox_Core.Enabled = Enabled;
+            CheckBox_DoubleEncDec.Enabled = Enabled;
+            comboBox_EncDecFunction.Enabled = Enabled;
+        }
+
+        private void Progress()
         {
             double Ppercent = (double)FormVariable.Size / (double)FormVariable.FileSize * 100;
             double PpercentTotal =  (double)FormVariable.TotalSize / ((double)FormVariable.FileSize *2) * 100;
@@ -115,12 +125,14 @@ namespace RijndaelFileEncrypt
                 ProgressBar_Total.Value = (int)PpercentTotal * ProgressBar_Total.Maximum / 100;
             }
         }
+
         private double TwoDecimalPlaces(double Twodouble)
         {
             Twodouble *= 100;
             Twodouble = (double)(int)Twodouble / 100;
             return Twodouble;
         }
+
         private void FormatBytes(long bytes)
         {
             string[] Suffix = { "byte", "KB", "MB", "GB", "TB" };
@@ -177,10 +189,11 @@ namespace RijndaelFileEncrypt
             else
             {
                 Monitor.Stop();
+                ElementEnabled(true);
                 FormatBytes(FormVariable.FileSize);
                 Label_DocSize.Text = $@"{m_Form.Progress:.00} {m_Form.UnitDoc} / {m_Form.DocSize:.00} {m_Form.Unit}";
-                Label_Total.Text = "100%";
-                Label_ProgressBar.Text = "100%";
+                Label_Total.Text = "100.00%";
+                Label_ProgressBar.Text = "100.00%";
                 ProgressBar_Total.Value = ProgressBar_Total.Maximum;
                 ProgressBar.Value = ProgressBar.Maximum;
             }
@@ -201,6 +214,7 @@ namespace RijndaelFileEncrypt
             comboBox_EncDecFunction.SelectedIndex = 1;
             await GetStrMemory();
         }
+
         private void pictureBox1_Click(object sender, EventArgs e)
         {
             MessageBox.Show(@"
@@ -210,8 +224,9 @@ namespace RijndaelFileEncrypt
 以上選項如果只透過Rijndael加密都不會吃效能
 
 記憶體加密：加密速度極快，使用記憶體進行加密速度極快
-　磁碟加密：加密速度極慢，透過實體應碟加密(暫存空間)
+磁碟加密：加密速度極慢，透過實體應碟加密(暫存空間)
 
+硬碟加密僅會以單核心效能運作
 
 雙層加密：
 透過自定義byte 1~255 共2類 每類共256組密碼
@@ -227,6 +242,13 @@ namespace RijndaelFileEncrypt
 
 請妥善保管雙重加密KEY，遺失任何密鑰將無法解密
 順序錯誤或任一組KEY錯誤都無法解密。
+
+如果要更改密鑰可用 密鑰產生工具.html
+此工具會自動產生256組不重複的密鑰，
+產生後會自動複製，然後直接把密鑰，貼到
+RijndaelFileEncrypt\Models\Key.cs
+更改密鑰前，請確保透過此工具加密的檔
+案已經解密，密鑰遺失將無法解密。
 ", "說明", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
 
