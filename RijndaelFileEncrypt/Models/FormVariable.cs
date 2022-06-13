@@ -19,7 +19,7 @@ namespace RijndaelFileEncrypt.Models
         public static long FileSize { get; set; } = 0;
         public double DocSize { get; set; } = 0;
         public double Progress { get; set; } = 0;
-        public string EncDecFilenameExtension { get; set; } = ".minitplus";
+        public string EncDecFilenameExtension { get; set; } = ".minwang";
         public CryptoStream RijndaelDoc { get; set; }
         public int RijndaeEn { get; set; } = 0;
         public static int Core { get; set; } = 0;
